@@ -5,13 +5,16 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const app = express();
-const Volunteer = require("./models/volunteer");
 const { verifyToken } = require("./middleware/middleware");
+// Mongoose Models
+const Volunteer = require("./models/volunteer");
+const BeAVolunteer = require("./models/beAVolunteer");
 // middlewares
 app.use(
   cors({
     origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
 app.use(cookieParser());
@@ -48,6 +51,25 @@ app.post("/jwt", async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     })
     .send({ success: true });
+});
+app.get("/be-a-volunteer/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const foundItem = await Volunteer.findById(id);
+  res.send({ message: foundItem });
+});
+app.post("/be-a-volunteer/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const updatedItem = await Volunteer.findByIdAndUpdate(
+    id,
+    { $inc: { num_volunteer: -1 } },
+    { new: true }
+  );
+  await new BeAVolunteer({
+    ...data,
+    num_volunteer: updatedItem.num_volunteer,
+  });
+  res.send({ message: "Successfully requested to be a volunteer" });
 });
 app.get("/need-volunteer-6", async (req, res) => {
   const filteredVolunteer = await Volunteer.find().sort({ date: -1 }).limit(6);
