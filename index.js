@@ -59,6 +59,16 @@ app.get("/myposts", verifyToken, async (req, res) => {
   const myPost = await Volunteer.find({ org_email: email });
   res.send({ message: myPost });
 });
+app.get("/myposts/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const foundItem = await Volunteer.findById(id);
+  res.send({ message: foundItem });
+});
+app.put("/myposts/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  await Volunteer.findByIdAndUpdate(id, req.body, { new: true });
+  res.send({ message: "Successfully Updated" });
+});
 app.delete("/myposts/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   await Volunteer.findByIdAndDelete(id);
