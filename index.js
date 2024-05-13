@@ -52,6 +52,27 @@ app.post("/jwt", async (req, res) => {
     })
     .send({ success: true });
 });
+app.get("/myposts", verifyToken, async (req, res) => {
+  const {
+    user: { email },
+  } = req;
+  const myPost = await Volunteer.find({ org_email: email });
+  res.send({ message: myPost });
+});
+app.delete("/myposts/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  await Volunteer.findByIdAndDelete(id);
+  res.send({ message: "Successfully deleted the post" });
+});
+app.get("/request-voluenteer", verifyToken, async (req, res) => {
+  const {
+    user: { email },
+  } = req;
+  const requestedVolunteer = await BeAVolunteer.find({
+    volunteer_email: email,
+  });
+  res.send({ message: requestedVolunteer });
+});
 app.get("/be-a-volunteer/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   const foundItem = await Volunteer.findById(id);
@@ -68,7 +89,7 @@ app.post("/be-a-volunteer/:id", verifyToken, async (req, res) => {
   await new BeAVolunteer({
     ...data,
     num_volunteer: updatedItem.num_volunteer,
-  });
+  }).save();
   res.send({ message: "Successfully requested to be a volunteer" });
 });
 app.get("/need-volunteer-6", async (req, res) => {
