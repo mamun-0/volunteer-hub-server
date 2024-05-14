@@ -15,7 +15,8 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://volunteerhub-f42e8.web.app",
+      "https://ourvolunteer-b4aee.web.app",
+      "https://ourvolunteer-b4aee.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -36,8 +37,8 @@ app.get("/logout", (req, res) => {
   res
     .clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 0,
     })
     .send({ success: true });
@@ -50,8 +51,8 @@ app.post("/jwt", async (req, res) => {
   res
     .cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: true,
+      sameSite: "none",
     })
     .send({ success: true });
 });
