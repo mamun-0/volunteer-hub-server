@@ -18,7 +18,6 @@ app.use(
       "https://volunteerhub-f42e8.web.app",
     ],
     credentials: true,
-    optionsSuccessStatus: 200,
   })
 );
 app.use(cookieParser());
