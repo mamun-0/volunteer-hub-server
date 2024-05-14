@@ -83,6 +83,11 @@ app.get("/request-voluenteer", verifyToken, async (req, res) => {
   });
   res.send({ message: requestedVolunteer });
 });
+app.delete("/request-voluenteer/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  await BeAVolunteer.findByIdAndDelete(id);
+  res.send({ message: "Successfully Cancel volunteer request" });
+});
 app.get("/be-a-volunteer/:id", verifyToken, async (req, res) => {
   const { id } = req.params;
   const foundItem = await Volunteer.findById(id);
