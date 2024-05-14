@@ -12,7 +12,11 @@ const BeAVolunteer = require("./models/beAVolunteer");
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://volunteerhub-f42e8.web.app",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -20,7 +24,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 mongoose
-  .connect("mongodb://127.0.0.1:27017/volunteer")
+  .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log(`Database connected`);
   })
