@@ -1,7 +1,7 @@
 // Mongoose Models
 const Volunteer = require("../models/volunteer");
 const BeAVolunteer = require("../models/beAVolunteer");
-
+const jwt = require("jsonwebtoken");
 module.exports.logout = (req, res) => {
   res
     .clearCookie("token", {
