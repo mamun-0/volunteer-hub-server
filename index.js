@@ -8,7 +8,6 @@ const { verifyToken } = require("./middleware/middleware");
 
 // Controllers
 const {
-  logout,
   jwtPOST,
   myposts,
   mypostsID,
@@ -49,7 +48,7 @@ mongoose
   });
 
 //   Routes
-app.get("/logout", logout);
+// app.get("/logout", logout);
 app.post("/jwt", jwtPOST);
 app.get("/myposts", verifyToken, myposts);
 app.get("/myposts/:id", verifyToken, mypostsID);

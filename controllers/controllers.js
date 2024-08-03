@@ -2,35 +2,17 @@
 const Volunteer = require("../models/volunteer");
 const BeAVolunteer = require("../models/beAVolunteer");
 const jwt = require("jsonwebtoken");
-module.exports.logout = (req, res) => {
-  res
-    .clearCookie("token", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 0,
-    })
-    .send({ success: true });
-};
 
 module.exports.jwtPOST = async (req, res) => {
   const { email } = req.body;
   const token = jwt.sign({ email }, process.env.JWT_SECRECT, {
     expiresIn: "7d",
   });
-  res
-    .cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    })
-    .send({ success: true });
+  res.send({ token });
 };
 
 module.exports.myposts = async (req, res) => {
-  const {
-    user: { email },
-  } = req;
+  const { email } = req.decoded;
   const myPost = await Volunteer.find({ org_email: email });
   res.send({ message: myPost });
 };
@@ -52,9 +34,7 @@ module.exports.mypostsIDDELETE = async (req, res) => {
 };
 
 module.exports.request_voluenteer = async (req, res) => {
-  const {
-    user: { email },
-  } = req;
+  const { email } = req.decoded;
   const requestedVolunteer = await BeAVolunteer.find({
     volunteer_email: email,
   });
