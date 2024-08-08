@@ -5,21 +5,14 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = express();
 const { verifyToken } = require("./middleware/middleware");
-
+const MyPostsRouter = require("./controllers/myposts");
+const RequestVolunteerRouter = require("./controllers/requestVolunteer");
+const BeAVolunteerRouter = require("./controllers/beAVolunteer");
+const NeedVolunteerRouter = require("./controllers/needVolunteer");
 // Controllers
 const {
   jwtPOST,
-  myposts,
-  mypostsID,
-  mypostsIDPUT,
-  mypostsIDDELETE,
-  request_voluenteer,
-  request_voluenteerDELETE,
-  be_a_volunteer,
-  be_a_volunteerPOST,
   need_volunteer_6,
-  need_volunteer,
-  need_volunteerID,
   add_volunteerPOST,
 } = require("./controllers/controllers");
 // middlewares
@@ -48,19 +41,13 @@ mongoose
   });
 
 //   Routes
-// app.get("/logout", logout);
+app.use("/myposts", verifyToken, MyPostsRouter);
+app.use("/request-voluenteer", verifyToken, RequestVolunteerRouter);
+app.use("/be-a-volunteer", verifyToken, BeAVolunteerRouter);
+app.use("/need-volunteer", verifyToken, NeedVolunteerRouter);
+
 app.post("/jwt", jwtPOST);
-app.get("/myposts", verifyToken, myposts);
-app.get("/myposts/:id", verifyToken, mypostsID);
-app.put("/myposts/:id", verifyToken, mypostsIDPUT);
-app.delete("/myposts/:id", verifyToken, mypostsIDDELETE);
-app.get("/request-voluenteer", verifyToken, request_voluenteer);
-app.delete("/request-voluenteer/:id", verifyToken, request_voluenteerDELETE);
-app.get("/be-a-volunteer/:id", verifyToken, be_a_volunteer);
-app.post("/be-a-volunteer/:id", verifyToken, be_a_volunteerPOST);
 app.get("/need-volunteer-6", need_volunteer_6);
-app.get("/need-volunteer", verifyToken, need_volunteer);
-app.get("/need-volunteer/:id", verifyToken, need_volunteerID);
 app.post("/add-volunteer", verifyToken, add_volunteerPOST);
 
 const port = process.env.PORT || 3000;
